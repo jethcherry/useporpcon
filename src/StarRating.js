@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PropTypes } from "prop-types";
+import PropTypes from "prop-types";
 
 const containerStyle = {
   display: "flex",
@@ -28,7 +28,7 @@ export default function StarRating({
   className = "",
   messages = [],
   defaultRating = 0,
-  onSetRating,
+  onSetRating = () => {}, // Default no-op function
 }) {
   const [rating, setRating] = useState(defaultRating);
   const [tempRating, setTempRating] = useState(0);
@@ -54,7 +54,7 @@ export default function StarRating({
             onRate={() => handleRating(i + 1)}
             full={tempRating ? tempRating >= i + 1 : rating >= i + 1}
             onHoverIn={() => setTempRating(i + 1)}
-            onHoverOut={() => setTempRating("")}
+            onHoverOut={() => setTempRating(0)}
             color={color}
             size={size}
           />
