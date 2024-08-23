@@ -160,16 +160,19 @@ function Logo() {
 function Search({ query, setQuery }) {
   const inputElement = useRef(null);
 
-  useEffect(function () {
-    function callBack(e) {
-      if (document.activeElement === inputElement.current) return;
-      if (e.code === "Enter") inputElement.current.focus();
-      setQuery("");
-    }
+  useEffect(
+    function () {
+      function callBack(e) {
+        if (document.activeElement === inputElement.current) return;
+        if (e.code === "Enter") inputElement.current.focus();
+        setQuery("");
+      }
 
-    document.addEventListener("keydown", callBack);
-    return () => document.addEventListener("keydown", callBack);
-  }, []);
+      document.addEventListener("keydown", callBack);
+      return () => document.addEventListener("keydown", callBack);
+    },
+    [setQuery]
+  );
   // useEffect(function () {
   //   const el = document.querySelector(".search");
   //   console.log(el);
