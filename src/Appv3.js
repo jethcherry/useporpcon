@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating";
 import { useMovies } from "./useMovies";
 import { useLocalStorageState } from "./useLocalStorageState";
-import { useKey } from "./useKey";
 
 const KEY = "d461f7df"; // Your OMDB API key
 
@@ -39,14 +38,12 @@ export default function App() {
     );
   }
 
+  // Store the watched list in local storage whenever it changes
+
   return (
     <>
       <NavBar>
-        <Search
-          query={query}
-          setQuery={setQuery}
-          onCloseMovie={handleCloseMovie}
-        />
+        <Search query={query} setQuery={setQuery} />
         <NumResults movies={movies} />
       </NavBar>
       <Main>
@@ -114,10 +111,8 @@ function Logo() {
   );
 }
 
-function Search({ query, setQuery, onCloseMovie }) {
+function Search({ query, setQuery }) {
   const inputElement = useRef(null);
-
-  useKey("Escape", onCloseMovie);
 
   useEffect(() => {
     function handleKeyDown(e) {
@@ -324,20 +319,16 @@ function WatchedSummary({ watched }) {
       <h2>Movies you watched</h2>
       <div>
         <p>
-          <span>#️⃣</span>
-          <span>{watched.length} movies</span>
+          <span>#️⃣</span> <span>{watched.length} movies</span>
         </p>
         <p>
-          <span>⭐</span>
-          <span>Average IMDb rating: {avgImdbRating.toFixed(1)}</span>
+          <span>⭐</span> <span>{avgImdbRating.toFixed(2)}</span>
         </p>
         <p>
-          <span>⭐</span>
-          <span>Average user rating: {avgUserRating.toFixed(1)}</span>
+          <span>🌟</span> <span>{avgUserRating.toFixed(2)}</span>
         </p>
         <p>
-          <span>⏱</span>
-          <span>Average runtime: {avgRuntime} minutes</span>
+          <span>⏳</span> <span>{avgRuntime.toFixed(2)} min</span>
         </p>
       </div>
     </div>
@@ -346,7 +337,7 @@ function WatchedSummary({ watched }) {
 
 function WatchedMovieList({ watched, onDeleteWatched }) {
   return (
-    <ul className="list list-watched">
+    <ul className="list">
       {watched.map((movie) => (
         <WatchedMovie
           movie={movie}
@@ -363,13 +354,26 @@ function WatchedMovie({ movie, onDeleteWatched }) {
     <li>
       <img src={movie.poster} alt={`${movie.title} poster`} />
       <h3>{movie.title}</h3>
-      <p>{movie.year}</p>
-      <button
-        className="btn-delete"
-        onClick={() => onDeleteWatched(movie.imdbID)}
-      >
-        &times;
-      </button>
+      <div>
+        <p>
+          <span>⭐</span>
+          <span>{movie.imdbRating}</span>
+        </p>
+        <p>
+          <span>🌟</span>
+          <span>{movie.userRating}</span>
+        </p>
+        <p>
+          <span>⏳</span>
+          <span>{movie.runtime} min</span>
+        </p>
+        <button
+          className="btn-delete"
+          onClick={() => onDeleteWatched(movie.imdbID)}
+        >
+          X
+        </button>
+      </div>
     </li>
   );
 }
